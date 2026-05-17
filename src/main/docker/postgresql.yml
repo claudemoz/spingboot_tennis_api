@@ -1,0 +1,17 @@
+services:
+  dyma-postgresql:
+    image: postgres:15
+    container_name: tennis-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - dyma-postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  dyma-postgres-data:
+
+#  docker-compose -f  src/main/docker/postgresql.yml up -d
