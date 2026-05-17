@@ -12,11 +12,10 @@ import org.mockito.MockitoAnnotations;
 
 import com.claude.tennis.Playerlist;
 import com.claude.tennis.dto.PlayerDto;
-import com.claude.tennis.entities.PlayerEntity;
 import com.claude.tennis.mappers.PlayerMapper;
 import com.claude.tennis.repositories.PlayerRepository;
 
-public class PlayerServiceTest {
+public class PlayerServiceUnitTest {
 
   @Mock
   PlayerRepository playerRepository;
@@ -53,6 +52,21 @@ public class PlayerServiceTest {
 
     // Then
     Assertions.assertThat(player).extracting("firstName").isEqualTo("Rafael");
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenPlayerNotFound() {
+    // Given
+    String unknownLastNamePlayer = "Moz";
+    Mockito.when(playerRepository.findOneByLastNameIgnoreCase(unknownLastNamePlayer))
+        .thenReturn(Optional.empty());
+
+    // When
+    Throwable thrown = Assertions.catchThrowable(() -> playerService.getByLastName(unknownLastNamePlayer));
+
+    // Then
+    Assertions.assertThat(thrown).isInstanceOf(PlayerNotFoundException.class)
+        .hasMessage("Player with lastname " + unknownLastNamePlayer + " could not be found");
   }
 
 }
