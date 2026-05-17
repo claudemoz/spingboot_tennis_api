@@ -13,16 +13,16 @@ public class PlayerMapper {
 
   public PlayerDto toDto(PlayerEntity entity) {
     return new PlayerDto(
-        entity.getLastName(),
         entity.getFirstName(),
+        entity.getLastName(),
         entity.getBirthDate(),
         new RankDto(entity.getRank(), entity.getPoints()));
   }
 
   public PlayerEntity toEntity(PlayerToSave playerToSave) {
     PlayerEntity entity = new PlayerEntity(
-        playerToSave.lastName(),
         playerToSave.firstName(),
+        playerToSave.lastName(),
         playerToSave.birthDate(),
         new Rank(999999999, playerToSave.points()));
 

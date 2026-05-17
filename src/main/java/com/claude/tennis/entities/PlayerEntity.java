@@ -31,18 +31,18 @@ public class PlayerEntity {
   public PlayerEntity() {
   }
 
-  public PlayerEntity(String lastName, String firstName, LocalDate birthDate, Rank rank) {
-    this.lastName = lastName;
+  public PlayerEntity(String firstName, String lastName, LocalDate birthDate, Rank rank) {
     this.firstName = firstName;
+    this.lastName = lastName;
     this.birthDate = birthDate;
     this.points = rank.points();
     this.rank = rank.position();
   }
 
-  public PlayerEntity(Long id, String lastName, String firstName, LocalDate birthDate, Rank rank) {
+  public PlayerEntity(Long id, String firstName, String lastName, LocalDate birthDate, Rank rank) {
     this.id = id;
-    this.lastName = lastName;
     this.firstName = firstName;
+    this.lastName = lastName;
     this.birthDate = birthDate;
     this.points = rank.points();
     this.rank = rank.position();

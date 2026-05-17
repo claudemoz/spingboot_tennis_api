@@ -28,6 +28,7 @@ public class RankingCalculator {
     for (int i = 0; i < currentPlayersRanking.size(); i++) {
       PlayerEntity updatedPlayer = currentPlayersRanking.get(i);
       updatedPlayer.setRank(i + 1);
+      updatedPlayers.add(updatedPlayer);
     }
 
     return updatedPlayers;

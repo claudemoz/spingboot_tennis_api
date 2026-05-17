@@ -8,8 +8,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 public record PlayerToSave(
-                @NotBlank(message = "First name is mandatory") String firstName,
-                @NotBlank(message = "Last name is mandatory") String lastName,
-                @NotNull(message = "Birth date is mandatory") @PastOrPresent(message = "Birth date must be past or present") LocalDate birthDate,
-                @PositiveOrZero(message = "Points must be more than zero") int points) {
+    @NotBlank(message = "First name is mandatory") String firstName,
+    @NotBlank(message = "Last name is mandatory") String lastName,
+    @NotNull(message = "Birth date is mandatory") @PastOrPresent(message = "Birth date must be past or present") LocalDate birthDate,
+    @PositiveOrZero(message = "Points must be more than zero") int points) {
 }
