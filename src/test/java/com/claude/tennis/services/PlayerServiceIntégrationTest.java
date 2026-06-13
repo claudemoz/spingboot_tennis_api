@@ -79,7 +79,7 @@ public class PlayerServiceIntégrationTest {
     // When / Then
     Assertions.assertThatThrownBy(() -> playerService.delete(playerToDelete))
         .isInstanceOf(PlayerNotFoundException.class)
-        .hasMessage("Player with last name DoeTest could not be found.");
+        .hasMessage("Player with lastname " + playerToDelete + " could not be found");
   }
 
 }

@@ -6,14 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.claude.tennis.Playerlist;
 import com.claude.tennis.dto.PlayerDto;
 import com.claude.tennis.dto.PlayerToSave;
-import com.claude.tennis.dto.RankDto;
 import com.claude.tennis.entities.PlayerEntity;
 import com.claude.tennis.repositories.PlayerRepository;
 

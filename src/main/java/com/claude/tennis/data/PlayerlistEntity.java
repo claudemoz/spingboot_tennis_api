@@ -1,4 +1,4 @@
-package com.claude.tennis;
+package com.claude.tennis.data;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -8,7 +8,7 @@ import java.util.List;
 import com.claude.tennis.entities.PlayerEntity;
 import com.claude.tennis.entities.Rank;
 
-public class Playerlist {
+public class PlayerlistEntity {
 
         public static PlayerEntity RAFAEL_NADAL = new PlayerEntity(
                         "Rafael",

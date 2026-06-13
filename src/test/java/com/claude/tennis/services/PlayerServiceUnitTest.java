@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.claude.tennis.Playerlist;
+import com.claude.tennis.data.PlayerlistEntity;
 import com.claude.tennis.dto.PlayerDto;
 import com.claude.tennis.mappers.PlayerMapper;
 import com.claude.tennis.repositories.PlayerRepository;
@@ -31,7 +31,7 @@ public class PlayerServiceUnitTest {
   @Test
   public void shouldReturnPlayersRanking() {
     // Given
-    Mockito.when(playerRepository.findAll()).thenReturn(Playerlist.ALL);
+    Mockito.when(playerRepository.findAll()).thenReturn(PlayerlistEntity.ALL);
 
     // When
     List<PlayerDto> allPlayers = playerService.getAllPlayers();
@@ -45,7 +45,7 @@ public class PlayerServiceUnitTest {
   public void shouldReturnPlayerByLastName() {
     // Given
     Mockito.when(playerRepository.findOneByLastNameIgnoreCase("Nadal"))
-        .thenReturn(Optional.of(Playerlist.RAFAEL_NADAL));
+        .thenReturn(Optional.of(PlayerlistEntity.RAFAEL_NADAL));
 
     // When
     PlayerDto player = playerService.getByLastName("Nadal");
