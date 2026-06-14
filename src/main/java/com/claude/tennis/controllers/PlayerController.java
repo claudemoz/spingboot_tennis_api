@@ -44,7 +44,8 @@ public class PlayerController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerDto.class)) }),
 
       @ApiResponse(responseCode = "404", description = "Player not found", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) })
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) }),
+      @ApiResponse(responseCode = "403", description = "This user is not authorized to perform this action.")
   })
 
   @GetMapping("{lastName}")
@@ -55,7 +56,8 @@ public class PlayerController {
   @Operation(summary = "Creates a player", description = "Creates a player")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created player", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToSave.class)) })
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToSave.class)) }),
+      @ApiResponse(responseCode = "403", description = "This user is not authorized to perform this action.")
   })
   @PostMapping
   public PlayerDto createPlayer(@RequestBody @Valid PlayerToSave playerToRegister) {
@@ -65,8 +67,8 @@ public class PlayerController {
   @Operation(summary = "Updates a player", description = "Updates a player")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated player", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToSave.class)) })
-
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToSave.class)) }),
+      @ApiResponse(responseCode = "403", description = "This user is not authorized to perform this action.")
   })
   @PutMapping
   public PlayerDto updatePlayer(@RequestBody @Valid PlayerToSave playerToSave) {
@@ -78,7 +80,8 @@ public class PlayerController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Player has been deleted"),
       @ApiResponse(responseCode = "404", description = "Player with specified last name was not found.", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) })
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) }),
+      @ApiResponse(responseCode = "403", description = "This user is not authorized to perform this action.")
 
   })
   @DeleteMapping("{lastName}")

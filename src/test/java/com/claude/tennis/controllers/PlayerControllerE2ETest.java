@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 
 import com.claude.tennis.dto.PlayerDto;
@@ -21,90 +22,91 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebClient
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class PlayerControllerE2ETest {
 
-  @Autowired
-  private TestRestTemplate restTemplate;
+    @Autowired
+    private TestRestTemplate restTemplate;
 
-  @Test
-  public void shouldCreatePlayer() {
-    // Given
-    PlayerToSave playerToCreate = new PlayerToSave(
-        "Carlos",
-        "Alcaraz",
-        LocalDate.of(2003, Month.MAY, 5),
-        4500);
+    @Test
+    public void shouldCreatePlayer() {
+        // Given
+        PlayerToSave playerToCreate = new PlayerToSave(
+                "Carlos",
+                "Alcaraz",
+                LocalDate.of(2003, Month.MAY, 5),
+                4500);
 
-    // When
-    ResponseEntity<PlayerDto> playerResponseEntity = restTemplate.postForEntity(
-        "/players",
-        playerToCreate,
-        PlayerDto.class);
+        // When
+        ResponseEntity<PlayerDto> playerResponseEntity = restTemplate.postForEntity(
+                "/players",
+                playerToCreate,
+                PlayerDto.class);
 
-    // Then
-    Assertions.assertThat(playerResponseEntity.getBody().lastName()).isEqualTo("Alcaraz");
-    Assertions.assertThat(playerResponseEntity.getBody().rank().position()).isEqualTo(2);
-  }
+        // Then
+        Assertions.assertThat(playerResponseEntity.getBody().lastName()).isEqualTo("Alcaraz");
+        Assertions.assertThat(playerResponseEntity.getBody().rank().position()).isEqualTo(2);
+    }
 
-  @Test
-  public void shouldFailToCreatePlayer_WhenPlayerToCreateIsInvalid() {
-    // Given
-    PlayerToSave playerToCreate = new PlayerToSave(
-        "Carlos",
-        null,
-        LocalDate.of(2003, Month.MAY, 5),
-        4500);
+    @Test
+    public void shouldFailToCreatePlayer_WhenPlayerToCreateIsInvalid() {
+        // Given
+        PlayerToSave playerToCreate = new PlayerToSave(
+                "Carlos",
+                null,
+                LocalDate.of(2003, Month.MAY, 5),
+                4500);
 
-    // When
-    ResponseEntity<PlayerDto> playerResponseEntity = restTemplate.postForEntity(
-        "/players",
-        playerToCreate,
-        PlayerDto.class);
+        // When
+        ResponseEntity<PlayerDto> playerResponseEntity = restTemplate.postForEntity(
+                "/players",
+                playerToCreate,
+                PlayerDto.class);
 
-    // Then
-    Assertions.assertThat(playerResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-  }
+        // Then
+        Assertions.assertThat(playerResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 
-  @Test
-  public void shouldUpdatePlayerRanking() {
-    // Given
-    PlayerToSave playerToUpdate = new PlayerToSave(
-        "Rafael",
-        "NadalTest",
-        LocalDate.of(1986, Month.JUNE, 3),
-        1000);
+    @Test
+    public void shouldUpdatePlayerRanking() {
+        // Given
+        PlayerToSave playerToUpdate = new PlayerToSave(
+                "Rafael",
+                "NadalTest",
+                LocalDate.of(1986, Month.JUNE, 3),
+                1000);
 
-    // When
-    HttpEntity<PlayerToSave> request = new HttpEntity<>(playerToUpdate);
-    ResponseEntity<PlayerDto> playerResponseEntity = restTemplate.exchange(
-        "/players",
-        HttpMethod.PUT,
-        request,
-        PlayerDto.class);
+        // When
+        HttpEntity<PlayerToSave> request = new HttpEntity<>(playerToUpdate);
+        ResponseEntity<PlayerDto> playerResponseEntity = restTemplate.exchange(
+                "/players",
+                HttpMethod.PUT,
+                request,
+                PlayerDto.class);
 
-    // Then
-    Assertions.assertThat(playerResponseEntity.getBody().lastName()).isEqualTo("NadalTest");
-    Assertions.assertThat(playerResponseEntity.getBody().rank().position()).isEqualTo(3);
-  }
+        // Then
+        Assertions.assertThat(playerResponseEntity.getBody().lastName()).isEqualTo("NadalTest");
+        Assertions.assertThat(playerResponseEntity.getBody().rank().position()).isEqualTo(3);
+    }
 
-  @Test
-  public void shouldDeletePlayer() {
-    // Given / When
-    restTemplate.delete("/players/djokovictest");
+    @Test
+    public void shouldDeletePlayer() {
+        // Given / When
+        restTemplate.delete("/players/djokovictest");
 
-    ResponseEntity<List<PlayerDto>> allPlayersResponseEntity = restTemplate.exchange(
-        "/players",
-        HttpMethod.GET,
-        null,
-        new ParameterizedTypeReference<List<PlayerDto>>() {
-        });
+        ResponseEntity<List<PlayerDto>> allPlayersResponseEntity = restTemplate.exchange(
+                "/players",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<PlayerDto>>() {
+                });
 
-    // Then
-    Assertions.assertThat(allPlayersResponseEntity.getBody())
-        .extracting("lastName", "rank.position")
-        .containsExactly(Tuple.tuple("NadalTest", 1), Tuple.tuple("FedererTest", 2));
-  }
+        // Then
+        Assertions.assertThat(allPlayersResponseEntity.getBody())
+                .extracting("lastName", "rank.position")
+                .containsExactly(Tuple.tuple("NadalTest", 1), Tuple.tuple("FedererTest", 2));
+    }
 }
