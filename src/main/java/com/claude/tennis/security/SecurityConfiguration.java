@@ -39,12 +39,11 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(csrf -> csrf.disable())
+    http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorizations -> authorizations
             .requestMatchers("/swagger-ui/**").permitAll()
             .requestMatchers("/v3/api-docs/**").permitAll()
-            .requestMatchers("/accounts/login").permitAll()
+            .requestMatchers("/auth/login").permitAll()
             .requestMatchers("/healthcheck").permitAll()
             .requestMatchers(HttpMethod.GET, "/players/**").hasAuthority("ROLE_USER")
             .requestMatchers(HttpMethod.POST, "/players/**").hasAuthority("ROLE_ADMIN")
