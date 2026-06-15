@@ -1,0 +1,19 @@
+services:
+  tennis-postgresql:
+    image: postgres:15
+    container_name: tennis-postgres-production
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Axzzddrev20çd=XT
+    ports:
+      - "5424:5432"
+    volumes:
+      - tennis-postgres-data-production:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  tennis-postgres-data-production:
+
+#  docker-compose -f  src/main/docker/postgresql.yml up -d
+# ./mvnw clean spring-boot:run \ -D spring-boot.run.profiles=prod \ -D spring-boot.run.arguments="--spring.datasource.url=jdbc:postgresql://localhost:5424/postgres --spring.datasource.username=postgres --spring.datasource.password=Axzzddrev20çd=XT"
+# ./mvnw clean spring-boot:run -D spring-boot.run.profiles=prod -D spring-boot.run.arguments="--spring.datasource.url=jdbc:postgresql://localhost:5424/postgres --spring.datasource.username=postgres --spring.datasource.password=Axzzddrev20çd=XT"
