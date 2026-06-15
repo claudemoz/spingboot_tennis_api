@@ -18,8 +18,14 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+
+import com.claude.tennis.security.ApplicationWithoutSecurity;
 
 @WebMvcTest(controllers = PlayerController.class)
+@ActiveProfiles("test")
+@Import(ApplicationWithoutSecurity.class)
 public class PlayerControllerTest {
 
   @Autowired
