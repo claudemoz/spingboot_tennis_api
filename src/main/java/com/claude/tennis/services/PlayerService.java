@@ -14,9 +14,12 @@ import com.claude.tennis.dto.PlayerDto;
 import com.claude.tennis.dto.PlayerToSave;
 import com.claude.tennis.entities.PlayerEntity;
 import com.claude.tennis.repositories.PlayerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class PlayerService {
+  private final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
   private final PlayerMapper playerMapper;
   private PlayerRepository playerRepository;
@@ -27,6 +30,7 @@ public class PlayerService {
   }
 
   public List<PlayerDto> getAllPlayers() {
+    log.info("Invoking getAllPlayers()");
     // return playerRepository.findAll().stream()
     // .map(playerEntity -> new PlayerDto(
     // playerEntity.getFirstName(),
@@ -43,11 +47,13 @@ public class PlayerService {
           .sorted(Comparator.comparing(p -> p.rank().position()))
           .collect(Collectors.toList());
     } catch (DataAccessException e) {
+      log.error("Error occurred while retrieving all players", e);
       throw new PlayerRetrieveServiceException(e);
     }
   }
 
   public PlayerDto getByLastName(@PathVariable("name") String lastName) {
+    log.info("Invoking getByLastName() with lastName: {}", lastName);
     try {
       Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(lastName);
       if (player.isEmpty()) {
@@ -65,12 +71,14 @@ public class PlayerService {
 
       return playerMapper.toDto(playerEntity);
     } catch (DataAccessException e) {
+      log.error("Error occurred while retrieving player with lastName: {}", lastName, e);
       throw new PlayerRetrieveServiceException(e);
     }
 
   }
 
   public PlayerDto create(PlayerToSave playerToSave) {
+    log.info("Invoking create() with playerToSave: {}", playerToSave);
     try {
       // PlayerEntity playerEntity = new PlayerEntity();
       // playerEntity.setFirstName(playerToSave.firstName());
@@ -85,20 +93,24 @@ public class PlayerService {
       PlayerEntity playerEntity = playerMapper.toEntity(playerToSave);
       playerRepository.save(playerEntity);
 
+      log.info("Player created successfully: {}", playerEntity.getLastName());
       RankingCalculator rankingCalculator = new RankingCalculator(playerRepository.findAll());
       List<PlayerEntity> updatedPlayers = rankingCalculator.getNewPlayersRanking();
       playerRepository.saveAll(updatedPlayers);
 
       return getByLastName(playerEntity.getLastName());
     } catch (DataAccessException e) {
+      log.error("Error occurred while creating player", e);
       throw new PlayerRetrieveServiceException(e);
     }
   }
 
   public PlayerDto update(PlayerToSave playerToSave) {
+    log.info("Invoking update() with playerToSave: {}", playerToSave);
     try {
       Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
       if (player.isEmpty()) {
+        log.warn("Player with lastName {} not found for update", playerToSave.lastName());
         throw new PlayerNotFoundException(playerToSave.lastName());
       }
       PlayerEntity playerEntity = player.get();
@@ -115,6 +127,7 @@ public class PlayerService {
 
       return getByLastName(playerEntity.getLastName());
     } catch (DataAccessException e) {
+      log.error("Error occurred while updating player", e);
       throw new PlayerRetrieveServiceException(e);
     }
   }
@@ -129,6 +142,7 @@ public class PlayerService {
   // }
 
   public void delete(String lastName) {
+    log.info("Invoking delete() with lastName: {}", lastName);
     try {
       Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(lastName);
       if (player.isEmpty()) {
@@ -141,6 +155,7 @@ public class PlayerService {
       List<PlayerEntity> updatedPlayers = rankingCalculator.getNewPlayersRanking();
       playerRepository.saveAll(updatedPlayers);
     } catch (DataAccessException e) {
+      log.error("Error occurred while deleting player with lastName: {}", lastName, e);
       throw new PlayerRetrieveServiceException(e);
     }
 
