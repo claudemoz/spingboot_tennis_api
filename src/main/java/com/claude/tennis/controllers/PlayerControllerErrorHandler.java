@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.claude.tennis.Error;
 import com.claude.tennis.services.PlayerAlreadyExistsException;
 import com.claude.tennis.services.PlayerNotFoundException;
+import com.claude.tennis.services.PlayerRetrieveServiceException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,5 +41,11 @@ public class PlayerControllerErrorHandler {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @ExceptionHandler(PlayerRetrieveServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Error handlePlayerRetrieveServiceException(PlayerRetrieveServiceException ex) {
+        return new Error(ex.getMessage());
     }
 }

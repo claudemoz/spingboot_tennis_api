@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DataRetrievalFailureException;
 
 import com.claude.tennis.data.PlayerlistEntity;
 import com.claude.tennis.dto.PlayerDto;
@@ -67,6 +68,17 @@ public class PlayerServiceUnitTest {
     // Then
     Assertions.assertThat(thrown).isInstanceOf(PlayerNotFoundException.class)
         .hasMessage("Player with lastname " + unknownLastNamePlayer + " could not be found");
+  }
+
+  @Test
+  public void shouldFailToReturnPlayersRanking_WhenDataAccessExceptionOccurs() {
+    // Given
+    Mockito.when(playerRepository.findAll()).thenThrow(new DataRetrievalFailureException("Data access error"));
+
+    // When / Then
+    Assertions.assertThatThrownBy(() -> playerService.getAllPlayers())
+        .isInstanceOf(PlayerRetrieveServiceException.class)
+        .hasMessage("Could not retrieve player data");
   }
 
 }
