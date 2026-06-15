@@ -39,11 +39,18 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
+    http
+        .csrf(csrf -> csrf.disable())
+        .headers(headers -> headers
+            .contentSecurityPolicy(
+                csp -> csp.policyDirectives("default-src 'self' data:; style-src 'self' 'unsafe-inline';"))
+            .frameOptions(frameOptionsConfig -> frameOptionsConfig.deny())
+            .permissionsPolicyHeader(permissionsPolicyConfig -> permissionsPolicyConfig.policy(
+                "fullscreen=(self), geolocation=(), microphone=(), camera=()")))
         .authorizeHttpRequests(authorizations -> authorizations
             .requestMatchers("/swagger-ui/**").permitAll()
             .requestMatchers("/v3/api-docs/**").permitAll()
-            .requestMatchers("/auth/login").permitAll()
+            .requestMatchers("/accounts/login").permitAll()
             .requestMatchers("/healthcheck").permitAll()
             .requestMatchers(HttpMethod.GET, "/players/**").hasAuthority("ROLE_USER")
             .requestMatchers(HttpMethod.POST, "/players/**").hasAuthority("ROLE_ADMIN")
@@ -52,4 +59,5 @@ public class SecurityConfiguration {
             .anyRequest().authenticated());
     return http.build();
   }
+
 }
